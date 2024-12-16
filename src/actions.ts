@@ -2,13 +2,13 @@
 
 import { cache } from "react";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import {
   invalidateSession,
   validateSessionToken,
   type SessionValidationResult,
 } from "./lib/auth";
 import { deleteSessionTokenCookie } from "./lib/session";
+import type { ActionResult } from "./components/SignOutForm";
 
 export const getCurrentSession = cache(
   async (): Promise<SessionValidationResult> => {
@@ -21,19 +21,24 @@ export const getCurrentSession = cache(
   },
 );
 
-export const signOutAction = async () => {
+export const signOutAction = async (): Promise<ActionResult> => {
   const { session } = await getCurrentSession();
   if (session === null)
     return {
+      success: false,
       message: "Not authenticated",
     };
 
   try {
     await invalidateSession(session.id);
     await deleteSessionTokenCookie();
-    return redirect("/login");
+    return {
+      success: true,
+      message: "LoggingOut",
+    };
   } catch (e) {
     return {
+      success: false,
       message: `Error LoggingOut ${e}`,
     };
   }
