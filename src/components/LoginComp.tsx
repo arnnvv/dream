@@ -6,6 +6,7 @@ import { GoogleIcon } from "./ui/google-icon";
 import { TextGenerateEffect } from "./ui/text-generate-effect";
 import { HoverButton } from "./ui/hover-button";
 import { JSX } from "react";
+import Link from "next/link";
 
 export const LoginComp = (): JSX.Element => (
   <div className="h-screen w-full bg-gray-900 flex flex-col items-center justify-center relative overflow-hidden">
@@ -36,14 +37,12 @@ export const LoginComp = (): JSX.Element => (
         <p className="text-gray-300 mb-8">
           Embark on a journey beyond imagination
         </p>
-        <HoverButton
-          onClick={() => {
-            console.log("Google login clicked");
-          }}
-        >
-          <GoogleIcon className="w-5 h-5 mr-2" />
-          Log In with Google
-        </HoverButton>
+        <Link href="/login/google">
+          <HoverButton>
+            <GoogleIcon className="w-5 h-5 mr-2" />
+            Log In with Google
+          </HoverButton>
+        </Link>
       </div>
     </motion.div>
   </div>
