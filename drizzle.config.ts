@@ -1,3 +1,4 @@
+import { getDB } from "@/lib/db";
 import { type Config } from "drizzle-kit";
 
 export default {

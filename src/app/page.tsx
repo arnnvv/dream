@@ -1,5 +1,9 @@
+import { getCurrentSession } from "@/actions";
+import { redirect } from "next/navigation";
 import { JSX } from "react";
 
-export default function Home(): JSX.Element {
+export default async function Home(): Promise<JSX.Element> {
+  const { session } = await getCurrentSession();
+  if (session === null) return redirect("/login");
   return <>HI</>;
 }
