@@ -1,9 +1,11 @@
 import { getCurrentSession } from "@/actions";
+import { getSuperUser } from "@/lib/superuser";
 import { redirect } from "next/navigation";
 import { JSX } from "react";
 
 export default async function Home(): Promise<JSX.Element> {
-  const { session } = await getCurrentSession();
+  const { session, user } = await getCurrentSession();
   if (session === null) return redirect("/login");
+  if (user.email === getSuperUser()) return redirect("/superuser");
   return <>HI</>;
 }

@@ -1,4 +1,5 @@
 import {
+  boolean,
   integer,
   pgTableCreator,
   serial,
@@ -17,6 +18,7 @@ export const users = createTable("users", {
   email: varchar("email", { length: 255 }).unique().notNull(),
   name: text("name").notNull(),
   picture: text("picture").notNull(),
+  is_admin: boolean("is_admin").default(false),
 });
 
 export type User = typeof users.$inferSelect;

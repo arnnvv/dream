@@ -1,24 +1,29 @@
 "use client";
 
-import { JSX, ReactNode, useTransition } from "react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { ActionResult } from "@/actions";
+import { useRouter } from "next/navigation";
+import { JSX, ReactNode, useState, useTransition } from "react";
+import { toast } from "sonner";
 
-export const SignOutFormComponent = ({
+export const FormComponent = ({
   children,
   action,
 }: {
   children: ReactNode;
-  action: () => Promise<ActionResult>;
+  action: (_: any, formdata: FormData) => Promise<ActionResult>;
 }): JSX.Element => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [, setFormState] = useState<ActionResult>({
+    success: false,
+    message: "",
+  });
 
-  const handleSubmit = () => {
+  const handleSubmit = async (formData: FormData) => {
     startTransition(async () => {
       try {
-        const result = await action();
+        const result = await action(null, formData);
+        setFormState(result);
 
         if (result.success) {
           toast.success(result.message, {
@@ -28,8 +33,7 @@ export const SignOutFormComponent = ({
               onClick: () => toast.dismiss("success-toast"),
             },
           });
-          router.push("/login");
-        } else {
+        } else if (result.message) {
           toast.error(result.message, {
             id: "error-toast",
             action: {
@@ -46,18 +50,14 @@ export const SignOutFormComponent = ({
             onClick: () => toast.dismiss("error-toast"),
           },
         });
+      } finally {
+        router.refresh();
       }
     });
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleSubmit();
-      }}
-      aria-disabled={isPending}
-    >
+    <form action={handleSubmit} aria-disabled={isPending}>
       {children}
       {isPending && (
         <div className="absolute inset-0 flex items-center justify-center bg-white/50">
