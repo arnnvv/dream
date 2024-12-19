@@ -12,8 +12,13 @@ import { db } from "./lib/db";
 import { users } from "./lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getSuperUser } from "./lib/superuser";
+import { utapi } from "./lib/upload";
+import { UploadFileResult } from "uploadthing/types";
 
-export type ActionResult = { success: boolean; message: string };
+export type ActionResult = {
+  success: boolean;
+  message: string;
+};
 
 export const getCurrentSession = cache(
   async (): Promise<SessionValidationResult> => {
@@ -192,4 +197,29 @@ export async function removeAdmin(
       message: "Failed to remove admin privileges",
     };
   }
+}
+
+export async function uploadFiles(fd: FormData): Promise<ActionResult> {
+  const { session } = await getCurrentSession();
+  if (session === null)
+    return {
+      success: false,
+      message: "Not Logged in",
+    };
+
+  const files = fd.getAll("file") as File[];
+
+  const uploadedFiles: UploadFileResult[] = await utapi.uploadFiles(files);
+  uploadedFiles.forEach((uploadedFile: UploadFileResult) => {
+    if (uploadedFile.error) {
+      return {
+        success: false,
+        message: uploadedFile.error.message,
+      };
+    }
+  });
+  return {
+    success: false,
+    message: "DN",
+  };
 }
