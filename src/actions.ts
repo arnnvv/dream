@@ -12,8 +12,6 @@ import { db } from "./lib/db";
 import { treckImages, trecks, users } from "./lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getSuperUser } from "./lib/superuser";
-import { utapi } from "./lib/upload";
-import { UploadFileResult } from "uploadthing/types";
 
 export type ActionResult = {
   success: boolean;
@@ -202,46 +200,39 @@ export async function createTreck(
   _: any,
   formData: FormData,
 ): Promise<ActionResult> {
+  console.error("Called");
+  const title = formData.get("title")?.toString().trim();
+  const description = formData.get("description")?.toString().trim();
+  const images = formData
+    .getAll("images")
+    .map((img) => img.toString().trim())
+    .filter(Boolean);
+
+  if (!title || !description) {
+    return { success: false, message: "Title and description are required." };
+  }
+
   try {
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
-    const imageUrls = formData.getAll("imageUrl") as string[];
-
-    if (!title || !description) {
-      return {
-        success: false,
-        message: "Title and description are required",
-      };
-    }
-
     const [newTreck] = await db
       .insert(trecks)
-      .values({
-        title,
-        description,
-      })
+      .values({ title, description })
       .returning();
 
-    // Filter out empty strings and insert all valid image URLs
-    const validImageUrls = imageUrls.filter((url) => url.trim() !== "");
-    if (validImageUrls.length > 0) {
-      await db.insert(treckImages).values(
-        validImageUrls.map((url, index) => ({
-          treckId: newTreck.id,
-          imageUrl: url,
-          order: index,
-        })),
-      );
+    if (images.length > 0) {
+      const imageInserts = images.map((imageUrl, index) => ({
+        treckId: newTreck.id,
+        imageUrl,
+        order: index,
+      }));
+      await db.insert(treckImages).values(imageInserts);
     }
 
-    return {
-      success: true,
-      message: "Treck created successfully",
-    };
-  } catch (error) {
+    return { success: true, message: "Treck created successfully." };
+  } catch (error: any) {
+    console.error("Error creating treck:", error);
     return {
       success: false,
-      message: "Failed to create treck",
+      message: "An error occurred while creating the treck.",
     };
   }
 }
