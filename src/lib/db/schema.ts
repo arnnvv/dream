@@ -36,3 +36,30 @@ export const sessions = createTable("sessions", {
 });
 
 export type Session = typeof sessions.$inferSelect;
+
+export const trecks = createTable("trecks", {
+  id: serial("id").primaryKey(),
+  title: varchar("title").notNull(),
+  description: text("description").notNull(),
+  createdAt: timestamp("created_at", {
+    withTimezone: true,
+    mode: "date",
+  })
+    .defaultNow()
+    .notNull(),
+});
+
+export type Treck = typeof trecks.$inferSelect;
+export type NewTreck = typeof trecks.$inferInsert;
+
+export const treckImages = createTable("treck_images", {
+  id: serial("id").primaryKey(),
+  treckId: integer("treck_id")
+    .notNull()
+    .references(() => trecks.id),
+  imageUrl: text("image_url").notNull(),
+  order: integer("order").default(0),
+});
+
+export type TreckImage = typeof treckImages.$inferSelect;
+export type NewTreckImage = typeof treckImages.$inferInsert;

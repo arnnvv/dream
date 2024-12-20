@@ -9,7 +9,7 @@ import {
 } from "./lib/auth";
 import { deleteSessionTokenCookie } from "./lib/session";
 import { db } from "./lib/db";
-import { users } from "./lib/db/schema";
+import { treckImages, trecks, users } from "./lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getSuperUser } from "./lib/superuser";
 import { utapi } from "./lib/upload";
@@ -198,28 +198,50 @@ export async function removeAdmin(
     };
   }
 }
+export async function createTreck(
+  _: any,
+  formData: FormData,
+): Promise<ActionResult> {
+  try {
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const imageUrls = formData.getAll("imageUrl") as string[];
 
-export async function uploadFiles(fd: FormData): Promise<ActionResult> {
-  const { session } = await getCurrentSession();
-  if (session === null)
-    return {
-      success: false,
-      message: "Not Logged in",
-    };
-
-  const files = fd.getAll("file") as File[];
-
-  const uploadedFiles: UploadFileResult[] = await utapi.uploadFiles(files);
-  uploadedFiles.forEach((uploadedFile: UploadFileResult) => {
-    if (uploadedFile.error) {
+    if (!title || !description) {
       return {
         success: false,
-        message: uploadedFile.error.message,
+        message: "Title and description are required",
       };
     }
-  });
-  return {
-    success: false,
-    message: "DN",
-  };
+
+    const [newTreck] = await db
+      .insert(trecks)
+      .values({
+        title,
+        description,
+      })
+      .returning();
+
+    // Filter out empty strings and insert all valid image URLs
+    const validImageUrls = imageUrls.filter((url) => url.trim() !== "");
+    if (validImageUrls.length > 0) {
+      await db.insert(treckImages).values(
+        validImageUrls.map((url, index) => ({
+          treckId: newTreck.id,
+          imageUrl: url,
+          order: index,
+        })),
+      );
+    }
+
+    return {
+      success: true,
+      message: "Treck created successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to create treck",
+    };
+  }
 }
