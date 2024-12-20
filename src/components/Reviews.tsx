@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { JSX, useEffect, useRef, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export const Reviews = ({
   items,
@@ -11,9 +12,10 @@ export const Reviews = ({
   className,
 }: {
   items: {
-    quote: string;
+    review: string;
     name: string;
-    title: string;
+    heading: string;
+    image: string;
   }[];
   direction?: "left" | "right";
   speed?: "fast" | "normal" | "slow";
@@ -103,16 +105,20 @@ export const Reviews = ({
                 aria-hidden="true"
                 className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
               ></div>
-              <span className=" relative z-20 text-sm leading-[1.6] text-gray-100 font-normal">
-                {item.quote}
+              <span className="relative z-20 text-sm leading-[1.6] text-gray-100 font-normal">
+                {item.review}
               </span>
-              <div className="relative z-20 mt-6 flex flex-row items-center">
+              <div className="relative z-20 mt-6 flex flex-row items-center space-x-4">
+                <Avatar>
+                  <AvatarImage src={item.image} alt={item.name} />
+                  <AvatarFallback>{item.name.charAt(0)}</AvatarFallback>
+                </Avatar>
                 <span className="flex flex-col gap-1">
-                  <span className=" text-sm leading-[1.6] text-gray-400 font-normal">
+                  <span className="text-sm leading-[1.6] text-gray-400 font-normal">
                     {item.name}
                   </span>
-                  <span className=" text-sm leading-[1.6] text-gray-400 font-normal">
-                    {item.title}
+                  <span className="text-sm leading-[1.6] text-gray-400 font-normal">
+                    {item.heading}
                   </span>
                 </span>
               </div>

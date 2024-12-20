@@ -63,3 +63,13 @@ export const treckImages = createTable("treck_images", {
 
 export type TreckImage = typeof treckImages.$inferSelect;
 export type NewTreckImage = typeof treckImages.$inferInsert;
+
+export const testimonials = createTable("testimonials", {
+  id: serial("id").primaryKey(),
+  review: text("review").notNull(),
+  name: varchar("name").notNull(),
+  heading: varchar("title").notNull(),
+  image: text("image_url").notNull(),
+});
+
+export type Testimonial = typeof testimonials.$inferSelect;
