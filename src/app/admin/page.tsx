@@ -1,7 +1,7 @@
-import { createTreck, getCurrentSession, createTestimonial } from "@/actions";
+import { createTestimonial, createTreck, getCurrentSession } from "@/actions";
+import { ExistingTestimonials } from "@/components/ExistingTestimonials";
+import { ExistingTrecks } from "@/components/ExistingTrecks";
 import { FormComponent } from "@/components/FormComponent";
-import { db } from "@/lib/db";
-import { treckImages, trecks, testimonials } from "@/lib/db/schema";
 import { redirect } from "next/navigation";
 import { JSX } from "react";
 
@@ -10,35 +10,10 @@ export default async function Admin(): Promise<JSX.Element> {
   if (session === null) return redirect("/login");
   if (user.is_admin !== true) return redirect("/");
 
-  const allTrecks = await db.select().from(trecks).orderBy(trecks.id);
-  const allTestimonials = await db
-    .select()
-    .from(testimonials)
-    .orderBy(testimonials.id);
-
-  const allImages = await db
-    .select()
-    .from(treckImages)
-    .orderBy(treckImages.order);
-  const imagesByTreckId: Record<
-    number,
-    { imageUrl: string; order: number | null }[]
-  > = {};
-  for (const img of allImages) {
-    if (!imagesByTreckId[img.treckId]) {
-      imagesByTreckId[img.treckId] = [];
-    }
-    imagesByTreckId[img.treckId].push({
-      imageUrl: img.imageUrl,
-      order: img.order,
-    });
-  }
-
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
-      {/* Treck Form Section */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-6">Add New Treck</h2>
         <FormComponent action={createTreck}>
@@ -158,69 +133,8 @@ export default async function Admin(): Promise<JSX.Element> {
         </FormComponent>
       </section>
 
-      {/* Existing Trecks Section */}
-      <section className="mb-12">
-        <h2 className="text-2xl font-bold mb-4">Existing Trecks</h2>
-        {allTrecks.length === 0 ? (
-          <p>No trecks found.</p>
-        ) : (
-          <ul className="divide-y divide-gray-200">
-            {allTrecks.map((t) => (
-              <li key={t.id} className="py-4">
-                <div className="font-semibold text-xl">{t.title}</div>
-                <div className="text-gray-700 mb-2">{t.description}</div>
-                <div className="text-sm text-gray-500 mb-4">
-                  Created at: {t.createdAt.toLocaleString()}
-                </div>
-                {imagesByTreckId[t.id]?.length > 0 && (
-                  <div className="flex flex-wrap gap-4">
-                    {imagesByTreckId[t.id].map((img, idx) => (
-                      <div
-                        key={idx}
-                        className="w-32 h-32 border border-gray-300 rounded overflow-hidden"
-                      >
-                        <img
-                          src={img.imageUrl}
-                          alt={`Treck ${t.title} Image #${img.order}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-bold mb-4">Existing Testimonials</h2>
-        {allTestimonials.length === 0 ? (
-          <p>No testimonials found.</p>
-        ) : (
-          <ul className="divide-y divide-gray-200">
-            {allTestimonials.map((testimonial) => (
-              <li key={testimonial.id} className="py-4">
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 rounded-full overflow-hidden">
-                    <img
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <div className="font-semibold">{testimonial.name}</div>
-                    <div className="text-gray-600">{testimonial.heading}</div>
-                  </div>
-                </div>
-                <div className="text-gray-700">{testimonial.review}</div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      <ExistingTrecks />
+      <ExistingTestimonials />
     </div>
   );
 }

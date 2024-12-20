@@ -2,6 +2,20 @@ import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "media.wired.com",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "propunjabtv.com",
+        port: "",
+      },
+    ],
+  },
   experimental: {
     ppr: "incremental",
     mdxRs: true,

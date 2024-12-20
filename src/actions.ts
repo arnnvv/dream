@@ -12,7 +12,6 @@ import { db } from "./lib/db";
 import { testimonials, treckImages, trecks, users } from "./lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getSuperUser } from "./lib/superuser";
-import { error } from "console";
 
 export type ActionResult = {
   success: boolean;
