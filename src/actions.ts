@@ -9,9 +9,10 @@ import {
 } from "./lib/auth";
 import { deleteSessionTokenCookie } from "./lib/session";
 import { db } from "./lib/db";
-import { treckImages, trecks, users } from "./lib/db/schema";
+import { testimonials, treckImages, trecks, users } from "./lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getSuperUser } from "./lib/superuser";
+import { error } from "console";
 
 export type ActionResult = {
   success: boolean;
@@ -233,6 +234,49 @@ export async function createTreck(
     return {
       success: false,
       message: "An error occurred while creating the treck.",
+    };
+  }
+}
+
+export async function createTestimonial(
+  _: any,
+  formData: FormData,
+): Promise<ActionResult> {
+  const { user } = await getCurrentSession();
+  if (!user?.is_admin) {
+    return {
+      success: false,
+      message: "Unauthorised",
+    };
+  }
+  const name = formData.get("name") as string;
+  const heading = formData.get("heading") as string;
+  const review = formData.get("review") as string;
+  const image = formData.get("image") as string;
+
+  if (!name || !heading || !review || !image) {
+    console.error(name, heading, review, image);
+    return {
+      success: false,
+      message: ">_",
+    };
+  }
+  try {
+    await db.insert(testimonials).values({
+      name,
+      heading,
+      review,
+      image,
+    });
+    return {
+      success: true,
+      message: "Added Testimonial",
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      message: `${e}`,
     };
   }
 }
