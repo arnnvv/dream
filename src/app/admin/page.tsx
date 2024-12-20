@@ -2,7 +2,6 @@ import { createTreck, getCurrentSession } from "@/actions";
 import { FormComponent } from "@/components/FormComponent";
 import { db } from "@/lib/db";
 import { treckImages, trecks } from "@/lib/db/schema";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import { JSX } from "react";
 
