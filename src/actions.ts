@@ -201,7 +201,6 @@ export async function createTreck(
   _: any,
   formData: FormData,
 ): Promise<ActionResult> {
-  console.error("Called");
   const title = formData.get("title")?.toString().trim();
   const description = formData.get("description")?.toString().trim();
   const priceStr = formData.get("price")?.toString().trim();
@@ -306,6 +305,39 @@ export async function createTestimonial(
     return {
       success: false,
       message: `${e}`,
+    };
+  }
+}
+
+export async function deleteTreck(
+  _: any,
+  formData: FormData,
+): Promise<ActionResult> {
+  const treckId = formData.get("treeckId");
+
+  if (!treckId) {
+    return {
+      success: false,
+      message: "Treck ID not provided.",
+    };
+  }
+  console.log(treckId);
+  try {
+    await db
+      .delete(treckImages)
+      .where(eq(treckImages.treckId, Number(treckId)));
+
+    await db.delete(trecks).where(eq(trecks.id, Number(treckId)));
+
+    return {
+      success: true,
+      message: "Treck has been successfully deleted.",
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      message: "Error in deleting",
     };
   }
 }
