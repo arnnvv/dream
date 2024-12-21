@@ -20,7 +20,7 @@ export const ExistingTrecks = async (): Promise<JSX.Element> => (
               <p className="text-sm text-gray-500 mb-4">
                 Created at: {treck.createdAt.toLocaleString()}
               </p>
-              {imagesByTreckId[treck.id]?.length > 0 && (
+              {/* {imagesByTreckId[treck.id]?.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {imagesByTreckId[treck.id].map((img, idx) => (
                     <div
@@ -36,7 +36,7 @@ export const ExistingTrecks = async (): Promise<JSX.Element> => (
                     </div>
                   ))}
                 </div>
-              )}
+              )} */}
             </CardContent>
           </Card>
         ))}
