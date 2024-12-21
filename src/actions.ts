@@ -196,6 +196,7 @@ export async function removeAdmin(
     };
   }
 }
+
 export async function createTreck(
   _: any,
   formData: FormData,
@@ -203,19 +204,48 @@ export async function createTreck(
   console.error("Called");
   const title = formData.get("title")?.toString().trim();
   const description = formData.get("description")?.toString().trim();
+  const priceStr = formData.get("price")?.toString().trim();
+  const datesRaw = formData
+    .getAll("dates")
+    .map((date) => date.toString().trim());
   const images = formData
     .getAll("images")
     .map((img) => img.toString().trim())
     .filter(Boolean);
 
-  if (!title || !description) {
+  if (!title || !description || !priceStr || datesRaw.length === 0) {
     return { success: false, message: "Title and description are required." };
+  }
+
+  const price = parseFloat(priceStr);
+  if (isNaN(price) || price < 0) {
+    return {
+      success: false,
+      message: "Price must be a valid non-negative number.",
+    };
+  }
+
+  const dates: Date[] = [];
+  for (const dateStr of datesRaw) {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) {
+      return {
+        success: false,
+        message: `Invalid date format: ${dateStr}`,
+      };
+    }
+    dates.push(date);
   }
 
   try {
     const [newTreck] = await db
       .insert(trecks)
-      .values({ title, description })
+      .values({
+        title,
+        description,
+        price,
+        dates,
+      })
       .returning();
 
     if (images.length > 0) {

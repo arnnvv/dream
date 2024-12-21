@@ -1,5 +1,6 @@
 import { addAdminAction, getCurrentSession, removeAdmin } from "@/actions";
 import { FormComponent } from "@/components/FormComponent";
+import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,45 +23,48 @@ export default async function SuperPage(): Promise<JSX.Element> {
     .where(eq(users.is_admin, true));
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>Manage Administrators</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <FormComponent action={addAdminAction}>
-          <Input
-            type="email"
-            name="email"
-            placeholder="your@email.com"
-            className="flex-1"
-          />
-          <Button type="submit">Add Admin</Button>
-        </FormComponent>
-        <div className="space-y-2">
-          {admins.map((admin: User) => (
-            <div
-              key={admin.email}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-            >
-              <div>
-                <div className="font-medium">{admin.name}</div>
-                <div className="text-sm text-gray-500">{admin.email}</div>
+    <>
+      <Navbar />
+      <Card className="w-full max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle>Manage Administrators</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FormComponent action={addAdminAction}>
+            <Input
+              type="email"
+              name="email"
+              placeholder="your@email.com"
+              className="flex-1"
+            />
+            <Button type="submit">Add Admin</Button>
+          </FormComponent>
+          <div className="space-y-2">
+            {admins.map((admin: User) => (
+              <div
+                key={admin.email}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+              >
+                <div>
+                  <div className="font-medium">{admin.name}</div>
+                  <div className="text-sm text-gray-500">{admin.email}</div>
+                </div>
+                <FormComponent action={removeAdmin}>
+                  <input type="hidden" name="email" value={admin.email} />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    type="submit"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </FormComponent>
               </div>
-              <FormComponent action={removeAdmin}>
-                <input type="hidden" name="email" value={admin.email} />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  type="submit"
-                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </FormComponent>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </>
   );
 }

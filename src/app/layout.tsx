@@ -4,7 +4,6 @@ import type { JSX, ReactNode } from "react";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
-import { Navbar } from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "Dream Trecks",
@@ -29,7 +28,6 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <Navbar />
         {children}
         <Toaster richColors={true} />
       </body>

@@ -47,6 +47,10 @@ export const trecks = createTable("trecks", {
   })
     .defaultNow()
     .notNull(),
+  price: integer("price").notNull(),
+  dates: timestamp("dates", { withTimezone: true, mode: "date" })
+    .array()
+    .notNull(),
 });
 
 export type Treck = typeof trecks.$inferSelect;
