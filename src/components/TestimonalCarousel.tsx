@@ -97,7 +97,7 @@ const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({ testimonial
 
                                         {/* Review Text */}
                                         <blockquote className="text-2xl text-gray-700 italic mb-12 text-center leading-relaxed">
-                                            "{testimonial.review}"
+                                            &quot;{testimonial.review}&quot;
                                         </blockquote>
 
                                         {/* Profile Section */}
@@ -133,8 +133,8 @@ const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({ testimonial
                                 onClick={() => setCurrentIndex(index)}
                                 type="button"
                                 className={`w-3 h-3 rounded-full transition-all duration-300 ${currentIndex === index
-                                        ? 'bg-orange-500 w-8'
-                                        : 'bg-orange-200 hover:bg-orange-300'
+                                    ? 'bg-orange-500 w-8'
+                                    : 'bg-orange-200 hover:bg-orange-300'
                                     }`}
                                 aria-label={`Go to slide ${index + 1}`}
                             />

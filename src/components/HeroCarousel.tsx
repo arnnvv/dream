@@ -74,7 +74,7 @@ const HeroCarousel: React.FC = () => {
                         {/* Description */}
                         <div className="max-w-xl space-y-8">
                             <p className="text-xl text-gray-300 leading-relaxed">
-                                Embark on extraordinary journeys through Earth's most breathtaking landscapes.
+                                Embark on extraordinary journeys through Earth&aposs most breathtaking landscapes.
                                 Discover uncharted paths and create unforgettable memories.
                             </p>
 
@@ -104,8 +104,8 @@ const HeroCarousel: React.FC = () => {
                         onClick={() => handleDotClick(index)}
                         type="button"
                         className={`h-1.5 transition-all duration-300 rounded-full ${index === currentIndex
-                                ? 'w-12 bg-orange-500'
-                                : 'w-1.5 bg-white/30 hover:bg-white/50'
+                            ? 'w-12 bg-orange-500'
+                            : 'w-1.5 bg-white/30 hover:bg-white/50'
                             }`}
                         aria-label={`Go to slide ${index + 1}`}
                     />
