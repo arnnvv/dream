@@ -1,13 +1,9 @@
 import { JSX } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { db } from "@/lib/db";
-import { trecks } from "@/lib/db/schema";
-import { imagesByTreckId } from "@/lib/db/queries";
+import { allTrecks, imagesByTreckId } from "@/lib/db/queries";
 import Image from "next/image";
 
 export const ExistingTrecks = async (): Promise<JSX.Element> => {
-  const allTrecks = await db.select().from(trecks).orderBy(trecks.id);
-
   return (
     <section className="mt-12">
       <h2 className="text-2xl font-bold mb-4">Existing Trecks</h2>
