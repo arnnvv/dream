@@ -15,12 +15,12 @@ export const ExistingTestimonials = async (): Promise<JSX.Element> => (
             <CardHeader>
               <div className="flex items-center gap-4">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden">
-                  <Image
+                  {/* <Image
                     src={testimonial.image}
                     alt={testimonial.name}
                     layout="fill"
                     objectFit="cover"
-                  />
+                  /> */}
                 </div>
                 <div>
                   <CardTitle className="text-lg">{testimonial.name}</CardTitle>
