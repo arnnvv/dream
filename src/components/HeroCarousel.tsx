@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 const HeroCarousel: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -134,3 +134,4 @@ const HeroCarousel: React.FC = () => {
 };
 
 export default HeroCarousel;
+

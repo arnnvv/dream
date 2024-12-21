@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Testimonial } from '@/lib/db/schema';
+import React, { useState, useEffect, useCallback } from "react";
+import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { Testimonial } from "@/lib/db/schema";
 
 interface TestimonialsCarouselProps {
     testimonials: Testimonial[];
