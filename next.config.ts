@@ -6,12 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "media.wired.com",
-        port: "",
-      },
-      {
-        protocol: "https",
-        hostname: "propunjabtv.com",
+        hostname: "**.**",
         port: "",
       },
     ],
